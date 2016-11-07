@@ -35,3 +35,12 @@ func printbool() {
 	var z = true
 	fmt.Print(x, y, z) // faltou o z!
 }
+
+// loops
+func loops() {
+	sum := 0
+	for i := 0; i < 10; i++ {
+		sum += i
+	}
+	fmt.Println(sum)
+}

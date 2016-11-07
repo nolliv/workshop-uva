@@ -19,6 +19,7 @@ ferramentas oficiais
 open-source
  - go get
  - go test
+ - go doc
  - goimports
  - gofmt
 Deploy
