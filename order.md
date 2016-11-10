@@ -36,3 +36,9 @@ introdução
  - quem sou eu (qualificação)
  - objetivo
  - o que será passado
+
+INSTALAR
+========
+go
+extensão do Atom(go-plus)
+backup dos sources de pacotes!

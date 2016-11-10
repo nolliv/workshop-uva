@@ -1,46 +1,46 @@
-// Comentários iguais aos do C
-/* assim também */
-
-// Organização do código por pacotes
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/bmizerany/pat"
+	"github.com/scvillon/workshop-uva/handlers"
+	"github.com/scvillon/workshop-uva/models"
+
+	mgo "gopkg.in/mgo.v2"
+)
 
 func main() {
-	// exported em maiúsculo
-	// UNICODE ALL THINGS!!!!!!1!!
-	fmt.Println("Hello, Modafukás!")
-}
-
-// O Tipo é a frente do nome!
-func add(x int, y int) int {
-	return x + y
-}
-
-// Pode omitir tipo repetido
-func add2(x, y int) int {
-	return x + y
-}
-
-// multiple return values
-func swap(x, y string) (string, string) {
-	return y, x
-}
-
-// variable declaration
-func printbool() {
-	// inicializado com zero value(false)
-	var x bool
-	y := true
-	var z = true
-	fmt.Print(x, y, z) // faltou o z!
-}
-
-// loops
-func loops() {
-	sum := 0
-	for i := 0; i < 10; i++ {
-		sum += i
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		fmt.Println("Problema ao se conectar com o Mongo!")
+		panic(err)
 	}
-	fmt.Println(sum)
+	defer session.Close()
+	db := session.DB("test").C("people")
+
+	err = db.DropCollection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = db.Insert(
+		&models.Person{Name: "Ale", Phone: "+55 53 8116 9639"},
+		&models.Person{Name: "Cla", Phone: "+55 53 8402 8510"})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Register handlers
+
+	// inicia o muxer
+	m := pat.New()
+	h := handlers.Handlers{Db: db}
+	// obs: higher order functions =D
+	m.Get("/find/:name", http.HandlerFunc(h.FindPersonHandler))
+	m.Get("/people", http.HandlerFunc(h.ListPeopleHandler))
+	m.Post("/create", http.HandlerFunc(h.CreatePersonHandler))
+	http.Handle("/", m)
+	http.ListenAndServe(":8080", nil)
 }
