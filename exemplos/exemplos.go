@@ -9,7 +9,7 @@ import "fmt"
 func main() {
 	// exported em maiúsculo
 	// UNICODE ALL THINGS!!!!!!1!!
-	fmt.Println("Hello, Modafukás!")
+	fmt.Println("Olár, UVA!")
 }
 
 //

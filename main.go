@@ -29,7 +29,9 @@ func main() {
 		&models.Person{Name: "Ale", Phone: "+55 53 8116 9639"},
 		&models.Person{Name: "Cla", Phone: "+55 53 8402 8510"})
 	if err != nil {
-		log.Fatal(err)
+		if err.Error() != "ns not found" {
+			log.Fatal(err)
+		}
 	}
 
 	// Register handlers
@@ -42,5 +44,7 @@ func main() {
 	m.Get("/people", http.HandlerFunc(h.ListPeopleHandler))
 	m.Post("/create", http.HandlerFunc(h.CreatePersonHandler))
 	http.Handle("/", m)
+	fmt.Println("tá rodando!")
+
 	http.ListenAndServe(":8080", nil)
 }
